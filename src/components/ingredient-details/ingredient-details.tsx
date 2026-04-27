@@ -6,12 +6,13 @@ import { Preloader } from '../ui/preloader';
 import { IngredientDetailsUI } from '../ui/ingredient-details';
 
 import { fetchIngredients } from '@services';
+import { selectIngredients } from '@services';
 
 export const IngredientDetails: FC = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
 
-  const ingredients = useSelector((state) => state.ingredients.items);
+  const ingredients = useSelector(selectIngredients);
 
   useEffect(() => {
     if (!ingredients.length) {

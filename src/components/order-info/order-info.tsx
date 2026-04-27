@@ -7,6 +7,8 @@ import { OrderInfoUI } from '../ui/order-info';
 
 import { fetchFeed, fetchOrders, fetchIngredients } from '@services';
 import { selectOrderByNumber } from '@services';
+import { selectIngredients } from '@services';
+
 import { TIngredient } from '@utils-types';
 import { selectIsAuth } from '@services';
 
@@ -16,7 +18,7 @@ export const OrderInfo: FC = () => {
 
   const orderNumber = Number(number);
 
-  const ingredients = useSelector((state) => state.ingredients.items);
+  const ingredients = useSelector(selectIngredients);
 
   const orderData = useSelector((state) =>
     selectOrderByNumber(state, orderNumber)

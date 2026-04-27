@@ -1,7 +1,7 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useCallback, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-import { TConstructorIngredient, TConstructorItems } from '@utils-types';
+import { TConstructorItems } from '@utils-types';
 
 import { BurgerConstructorUI } from '@ui';
 import { Modal } from '@components';
@@ -13,7 +13,7 @@ import {
   selectConstructorBun,
   selectConstructorItems,
   clearConstructor,
-  selectIsAuth // 👈 добавь селектор
+  selectIsAuth
 } from '@services';
 
 import { selectOrderRequest, selectOrderData } from '@services';
@@ -27,7 +27,7 @@ export const BurgerConstructor: FC = () => {
   const bun = useSelector(selectConstructorBun);
   const ingredients = useSelector(selectConstructorItems);
 
-  const isAuth = useSelector(selectIsAuth); // 👈
+  const isAuth = useSelector(selectIsAuth);
 
   const orderRequest = useSelector(selectOrderRequest);
   const orderModalData = useSelector(selectOrderData);
@@ -37,7 +37,7 @@ export const BurgerConstructor: FC = () => {
     ingredients
   };
 
-  const onOrderClick = () => {
+  const onOrderClick = useCallback(() => {
     if (!isAuth) {
       navigate('/login', {
         state: { from: location }
@@ -54,22 +54,24 @@ export const BurgerConstructor: FC = () => {
     ];
 
     dispatch(createOrder(ingredientsIds));
-  };
+  }, [isAuth, navigate, location, bun, ingredients, orderRequest, dispatch]);
+
+  useEffect(() => {
+    if (orderModalData && !orderRequest) {
+      dispatch(clearConstructor());
+    }
+  }, [orderModalData, orderRequest, dispatch]);
 
   const closeOrderModal = () => {
-    dispatch(clearConstructor());
     dispatch(clearOrder());
   };
 
   const price = useMemo(() => {
-    const bunPrice = bun ? bun.price * 2 : 0;
+    if (!bun) return 0;
 
-    const ingredientsPrice = ingredients.reduce(
-      (sum: number, item: TConstructorIngredient) => sum + item.price,
-      0
+    return (
+      bun.price * 2 + ingredients.reduce((sum, item) => sum + item.price, 0)
     );
-
-    return bunPrice + ingredientsPrice;
   }, [bun, ingredients]);
 
   return (
@@ -83,7 +85,7 @@ export const BurgerConstructor: FC = () => {
       {orderRequest && (
         <Modal
           titleClassName='text text_type_main-large'
-          onClose={closeOrderModal}
+          onClose={() => {}}
           title='Оформляем заказ...'
         >
           <Preloader />
