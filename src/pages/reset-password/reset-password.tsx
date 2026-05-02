@@ -6,26 +6,31 @@ import { ResetPasswordUI } from '@ui-pages';
 
 export const ResetPassword: FC = () => {
   const navigate = useNavigate();
+
   const [password, setPassword] = useState('');
   const [token, setToken] = useState('');
   const [error, setError] = useState<Error | null>(null);
 
-  const handleSubmit = (e: SyntheticEvent) => {
-    e.preventDefault();
-    setError(null);
-    resetPasswordApi({ password, token })
-      .then(() => {
-        localStorage.removeItem('resetPassword');
-        navigate('/login');
-      })
-      .catch((err) => setError(err));
-  };
-
   useEffect(() => {
-    if (!localStorage.getItem('resetPassword')) {
+    const isAllowed = localStorage.getItem('resetPassword');
+
+    if (!isAllowed) {
       navigate('/forgot-password', { replace: true });
     }
   }, [navigate]);
+
+  const handleSubmit = (e: SyntheticEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    resetPasswordApi({ password, token })
+      .then(() => {
+        localStorage.removeItem('resetPassword');
+
+        navigate('/login', { replace: true });
+      })
+      .catch((err) => setError(err));
+  };
 
   return (
     <ResetPasswordUI
