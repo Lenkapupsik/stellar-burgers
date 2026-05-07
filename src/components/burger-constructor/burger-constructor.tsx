@@ -84,6 +84,7 @@ export const BurgerConstructor: FC = () => {
 
       {orderRequest && (
         <Modal
+          data-testid='modal'
           titleClassName='text text_type_main-large'
           onClose={() => {}}
           title='Оформляем заказ...'
@@ -94,6 +95,7 @@ export const BurgerConstructor: FC = () => {
 
       {orderModalData && !orderRequest && (
         <Modal
+          data-testid='modal'
           titleClassName='text text_type_main-large'
           onClose={closeOrderModal}
           title=''
