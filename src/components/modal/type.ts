@@ -5,4 +5,5 @@ export type TModalProps = {
   onClose: () => void;
   children?: ReactNode;
   titleClassName?: string;
+  'data-testid'?: string;
 };

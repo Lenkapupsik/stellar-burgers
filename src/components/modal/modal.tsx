@@ -7,7 +7,7 @@ import { ModalUI } from '@ui';
 const modalRoot = document.getElementById('modals');
 
 export const Modal: FC<TModalProps> = memo(
-  ({ title, onClose, children, titleClassName }) => {
+  ({ title, onClose, children, titleClassName, ...rest }) => {
     useEffect(() => {
       const handleEsc = (e: KeyboardEvent) => {
         e.key === 'Escape' && onClose();
@@ -20,7 +20,12 @@ export const Modal: FC<TModalProps> = memo(
     }, [onClose]);
 
     return ReactDOM.createPortal(
-      <ModalUI title={title} onClose={onClose} titleClassName={titleClassName}>
+      <ModalUI
+        title={title}
+        onClose={onClose}
+        titleClassName={titleClassName}
+        {...rest}
+      >
         {children}
       </ModalUI>,
       modalRoot as HTMLDivElement

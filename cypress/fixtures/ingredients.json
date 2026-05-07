@@ -1,0 +1,7 @@
+{
+  "success": true,
+  "data": [
+    { "_id": "1", "name": "Булка", "type": "bun", "price": 10, "image": "https://test/bun.png" },
+    { "_id": "2", "name": "Соус", "type": "sauce", "price": 5, "image": "https://test/sauce.png" }
+  ]
+}
